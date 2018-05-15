@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CALCU by azkanab | three numbers at once</title>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.1/minty/bootstrap.min.css" rel="stylesheet" integrity="sha384-4eGtnTOp6je5m6l1Zcp2WUGR9Y7kJZuAiD3Pk2GAW3uNRgHQSIqcrcAxBipzlbWP" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<style>
+		#home{
+			font-size: 15px;
+		}
+		#about {
+			font-size: 15px;
+		}
+	</style>
+</head>
+<body>
+	<ul class="nav nav-pills nav-justified p-50">
+	  <li class="nav-item">
+	    <a class="nav-link active" href="#" id = "home">Home</a>
+	  </li>
+	  <!-- <li class="nav-item">
+	    <a class="nav-link" href="#" id = "about">About</a>
+	  </li> -->
+	</ul>
+
+	<h1 class = "text-success text-center" style = 'padding-top: 5%; font-size: 80px'>
+  		<small class="text-muted" style='font-size: 18px'>three numbers</small>
+  		  		CALCU
+  		<small class="text-muted" style='font-size: 18px'>at once</small>
+	</h1>
+
+	<div class="progress">
+  		<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+	</div>
+
+	<form style = 'padding-top: 3%; padding-left: 40%'class = "form-inline center-block" action = "/action_page.php">
+		<div class =  "form-group" id = "form1">
+			<div class = "col">
+				<label for = "first"></label>
+				<input type = "number" class = "form-control form-control-lg" step = "1" placeholder = "First Number" id = "firstnum">
+				<div id = "feedback1" class = "invalid-feedback" style = 'font-size: 10px'></div>
+			</div>
+		</div>
+  		<div class="custom-control custom-checkbox">
+      		<input type="checkbox" class="custom-control-input" value = "" id="customCheck1" />
+      		<label class="custom-control-label" for="customCheck1"></label>
+    	</div>
+	</form>
+	<form style = 'margin-top: 20px; padding-left: 40%' class = "form-inline" action = "/action_page.php">
+		<div class =  "form-group" id = "form2">
+			<div class = "col">
+				<label for = "first"></label>
+				<input type = "number" class = "form-control form-control-lg" step = "1" placeholder = "Second Number" id = "secnum">
+				<div id = "feedback2" class = "invalid-feedback" style = 'font-size: 10px'></div>
+			</div>
+		</div>
+  		<div class="custom-control custom-checkbox">
+      		<input type="checkbox" class="custom-control-input" value = "" id="customCheck2" />
+      		<label class="custom-control-label" for="customCheck2"></label>
+    	</div>
+	</form>
+	<form style = 'margin-top: 20px; margin-left: 40%' class = "form-inline" action = "/action_page.php">
+		<div class =  "form-group" id = "form3">
+			<div class = "col">
+				<label for = "first"></label>
+				<input type = "number" class = "form-control form-control-lg" step = "1" placeholder = "Third Number" id = "thirdnum">
+				<div id = "feedback3" class = "invalid-feedback" style = 'font-size: 10px'></div>
+			</div>
+		</div>
+  		<div class="custom-control custom-checkbox">
+      		<input type="checkbox" class="custom-control-input" value = "" id="customCheck3" />
+      		<label class="custom-control-label" for="customCheck3"></label>
+    	</div>
+	</form>
+
+	<input onclick = "plus();" style = 'margin-top: 3%; margin-left: 33%; font-size: 28px; padding-left: 3%; padding-right: 3%' type="button" class="btn btn-success btn-lg" value = "  +  ">
+	<input onclick= "minus();" style = 'margin-top: 3%; margin-left: 20px; font-size: 25px; padding-left: 3%; padding-right: 3%' type="button" class="btn btn-secondary btn-lg" value = "  -  ">
+	<input onclick = "times();" style = 'margin-top: 3%; margin-left: 20px; font-size: 25px; padding-left: 3%; padding-right: 3%' type="button" class="btn btn-info btn-lg" value = "  x  ">
+	<input onclick = "divide()" style = 'margin-top: 3%; margin-left: 20px; font-size: 25px; padding-left: 3%; padding-right: 3%' type="button" class="btn btn-warning btn-lg" value = "  /  ">
+
+	<div class="card text-white bg-primary mb-3" style='max-width: 40rem; margin-left: 35%; margin-top: 5%' id = "resultbox">
+	  <div class="card-header">
+	  	<h4 style = 'font-size: 20px' class = "card-title text-center">Your Result</h4>
+	  </div>
+	  <div class="card-body">
+	    <h4 style = 'font-size: 30px' class="card-title text-center" id = "result">-</h4>
+	  </div>
+	</div>
+
+	<script>
+		var nums = [];
+		var countcheck = 0;
+		var check = [];
+
+		function getData() {
+			nums.push(document.getElementById("firstnum").value);
+			nums.push(document.getElementById("secnum").value);
+			nums.push(document.getElementById("thirdnum").value);
+			check.push(document.getElementById("customCheck1").checked);
+			check.push(document.getElementById("customCheck2").checked);
+			check.push(document.getElementById("customCheck3").checked);
+			for (var i = 0; i < 3; i++) {
+				if (check[i] == true) {
+					countcheck += 1;
+				}
+			}
+		}
+
+		function deleteData() {
+			nums = [];
+			check = [];
+			countcheck = 0;
+		}
+
+		function plus() {
+			deleteData();
+			getData();
+			var result = 0;
+			if (countcheck >= 2) {
+				for (var i = 0; i < 3; i++) {
+					if (check[i] == true) {
+						result += parseInt(nums[i]);
+					}
+				}
+				if (isNaN(result)) {
+					document.getElementById("result").innerHTML = "Error";
+					document.getElementById("resultbox").className = "card text-white bg-danger mb-3";
+					for (var i = 0; i < 3; i++) {
+						if ((check[i] == true) && (isNaN(parseInt(nums[i])))) {
+							if (i == 0) {
+								document.getElementById("firstnum").className = "form-control form-control-lg is-invalid";
+								document.getElementById("feedback1").innerHTML = "no number found";
+							}
+							else if (i == 1) {
+								document.getElementById("secnum").className = "form-control form-control-lg is-invalid";
+								document.getElementById("feedback2").innerHTML = "no number found";
+							}
+							else {
+								document.getElementById("thirdnum").className = "form-control form-control-lg is-invalid";
+								document.getElementById("feedback3").innerHTML = "no number found";
+							}
+						}
+						else {
+							if (i == 0) {
+								document.getElementById("firstnum").className = "form-control form-control-lg";
+								document.getElementById("feedback1").innerHTML = "";
+							}
+							else if (i == 1) {
+								document.getElementById("secnum").className = "form-control form-control-lg";
+								document.getElementById("feedback2").innerHTML = "";
+							}
+							else {
+								document.getElementById("thirdnum").className = "form-control form-control-lg";
+								document.getElementById("feedback3").innerHTML = "";
+							}	
+						}
+					}
+				}
+				else {
+					document.getElementById("result").innerHTML = result.toString();
+					document.getElementById("resultbox").className = "card text-white bg-primary mb-3";
+					document.getElementById("feedback1").innerHTML = "";
+					document.getElementById("feedback2").innerHTML = "";
+					document.getElementById("feedback3").innerHTML = "";
+					document.getElementById("firstnum").className = "form-control form-control-lg";
+					document.getElementById("secnum").className = "form-control form-control-lg";
+					document.getElementById("thirdnum").className = "form-control form-control-lg";
+				}
+			}
+			else {
+				document.getElementById("result").innerHTML = "Input two numbers or more";
+				document.getElementById("resultbox").className = "card text-white bg-danger mb-3";
+				document.getElementById("feedback1").innerHTML = "";
+				document.getElementById("feedback2").innerHTML = "";
+				document.getElementById("feedback3").innerHTML = "";
+				document.getElementById("firstnum").className = "form-control form-control-lg";
+				document.getElementById("secnum").className = "form-control form-control-lg";
+				document.getElementById("thirdnum").className = "form-control form-control-lg";
+				for (var i = 0; i < 3; i++) {
+					if ((check[i] == true) && (isNaN(parseInt(nums[i])))) {
+						if (i == 0) {
+							document.getElementById("firstnum").className = "form-control form-control-lg is-invalid";
+							document.getElementById("feedback1").innerHTML = "no number found";
+						}
+						else if (i == 1) {
+							document.getElementById("secnum").className = "form-control form-control-lg is-invalid";
+							document.getElementById("feedback2").innerHTML = "no number found";
+						}
+						else {
+							document.getElementById("thirdnum").className = "form-control form-control-lg is-invalid";
+							document.getElementById("feedback3").innerHTML = "no number found";
+						}
+					}
+					else {
+						if (i == 0) {
+							document.getElementById("firstnum").className = "form-control form-control-lg";
+							document.getElementById("feedback1").innerHTML = "";
+						}
+						else if (i == 1) {
+							document.getElementById("secnum").className = "form-control form-control-lg";
+							document.getElementById("feedback2").innerHTML = "";
+						}
+						else {
+							document.getElementById("thirdnum").className = "form-control form-control-lg";
+							document.getElementById("feedback3").innerHTML = "";
+						}	
+					}
+				}
+			}
+		}
+
+		function minus() {
+			deleteData();
+			getData();
+			var first;
+			var result = 0;
+			if (countcheck >= 2) {
+				for (var i = 0; i < 3; i++) {
+					if (check[i] == true) {
+						result -= parseInt(nums[i]);
+						if (isNaN(first)) {
+							first = parseInt(nums[i]);
+						}
+					}
+				}
+				result += 2*first;
+				if (isNaN(result)) {
+					document.getElementById("result").innerHTML = "Error";
+					document.getElementById("resultbox").className = "card text-white bg-danger mb-3";
+					for (var i = 0; i < 3; i++) {
+						if ((check[i] == true) && (isNaN(parseInt(nums[i])))) {
+							if (i == 0) {
+								document.getElementById("firstnum").className = "form-control form-control-lg is-invalid";
+								document.getElementById("feedback1").innerHTML = "no number found";
+							}
+							else if (i == 1) {
+								document.getElementById("secnum").className = "form-control form-control-lg is-invalid";
+								document.getElementById("feedback2").innerHTML = "no number found";
+							}
+							else {
+								document.getElementById("thirdnum").className = "form-control form-control-lg is-invalid";
+								document.getElementById("feedback3").innerHTML = "no number found";
+							}
+						}
+						else {
+							if (i == 0) {
+								document.getElementById("firstnum").className = "form-control form-control-lg";
+								document.getElementById("feedback1").innerHTML = "";
+							}
+							else if (i == 1) {
+								document.getElementById("secnum").className = "form-control form-control-lg";
+								document.getElementById("feedback2").innerHTML = "";
+							}
+							else {
+								document.getElementById("thirdnum").className = "form-control form-control-lg";
+								document.getElementById("feedback3").innerHTML = "";
+							}	
+						}
+					}
+				}
+				else {
+					document.getElementById("result").innerHTML = result.toString();
+					document.getElementById("resultbox").className = "card text-white bg-primary mb-3";
+					document.getElementById("feedback1").innerHTML = "";
+					document.getElementById("feedback2").innerHTML = "";
+					document.getElementById("feedback3").innerHTML = "";
+					document.getElementById("firstnum").className = "form-control form-control-lg";
+					document.getElementById("secnum").className = "form-control form-control-lg";
+					document.getElementById("thirdnum").className = "form-control form-control-lg";
+				}
+			}
+			else {
+				document.getElementById("result").innerHTML = "Input two numbers or more";
+				document.getElementById("resultbox").className = "card text-white bg-danger mb-3";
+				document.getElementById("feedback1").innerHTML = "";
+				document.getElementById("feedback2").innerHTML = "";
+				document.getElementById("feedback3").innerHTML = "";
+				document.getElementById("firstnum").className = "form-control form-control-lg";
+				document.getElementById("secnum").className = "form-control form-control-lg";
+				document.getElementById("thirdnum").className = "form-control form-control-lg";
+				for (var i = 0; i < 3; i++) {
+					if ((check[i] == true) && (isNaN(parseInt(nums[i])))) {
+						if (i == 0) {
+							document.getElementById("firstnum").className = "form-control form-control-lg is-invalid";
+							document.getElementById("feedback1").innerHTML = "no number found";
+						}
+						else if (i == 1) {
+							document.getElementById("secnum").className = "form-control form-control-lg is-invalid";
+							document.getElementById("feedback2").innerHTML = "no number found";
+						}
+						else {
+							document.getElementById("thirdnum").className = "form-control form-control-lg is-invalid";
+							document.getElementById("feedback3").innerHTML = "no number found";
+						}
+					}
+					else {
+						if (i == 0) {
+							document.getElementById("firstnum").className = "form-control form-control-lg";
+							document.getElementById("feedback1").innerHTML = "";
+						}
+						else if (i == 1) {
+							document.getElementById("secnum").className = "form-control form-control-lg";
+							document.getElementById("feedback2").innerHTML = "";
+						}
+						else {
+							document.getElementById("thirdnum").className = "form-control form-control-lg";
+							document.getElementById("feedback3").innerHTML = "";
+						}	
+					}
+				}
+			}
+		}
+
+		function times() {
+			deleteData();
+			getData();
+			var result = 1;
+			if (countcheck >= 2) {
+				for (var i = 0; i < 3; i++) {
+					if (check[i] == true) {
+						result *= parseInt(nums[i]);
+					}
+				}
+				if (isNaN(result)) {
+					document.getElementById("result").innerHTML = "Error";
+					document.getElementById("resultbox").className = "card text-white bg-danger mb-3";
+					for (var i = 0; i < 3; i++) {
+						if ((check[i] == true) && (isNaN(parseInt(nums[i])))) {
+							if (i == 0) {
+								document.getElementById("firstnum").className = "form-control form-control-lg is-invalid";
+								document.getElementById("feedback1").innerHTML = "no number found";
+							}
+							else if (i == 1) {
+								document.getElementById("secnum").className = "form-control form-control-lg is-invalid";
+								document.getElementById("feedback2").innerHTML = "no number found";
+							}
+							else {
+								document.getElementById("thirdnum").className = "form-control form-control-lg is-invalid";
+								document.getElementById("feedback3").innerHTML = "no number found";
+							}
+						}
+						else {
+							if (i == 0) {
+								document.getElementById("firstnum").className = "form-control form-control-lg";
+								document.getElementById("feedback1").innerHTML = "";
+							}
+							else if (i == 1) {
+								document.getElementById("secnum").className = "form-control form-control-lg";
+								document.getElementById("feedback2").innerHTML = "";
+							}
+							else {
+								document.getElementById("thirdnum").className = "form-control form-control-lg";
+								document.getElementById("feedback3").innerHTML = "";
+							}	
+						}
+					}
+				}
+				else {
+					document.getElementById("result").innerHTML = result.toString();
+					document.getElementById("resultbox").className = "card text-white bg-primary mb-3";
+					document.getElementById("feedback1").innerHTML = "";
+					document.getElementById("feedback2").innerHTML = "";
+					document.getElementById("feedback3").innerHTML = "";
+					document.getElementById("firstnum").className = "form-control form-control-lg";
+					document.getElementById("secnum").className = "form-control form-control-lg";
+					document.getElementById("thirdnum").className = "form-control form-control-lg";
+				}
+			}
+			else {
+				document.getElementById("result").innerHTML = "Input two numbers or more";
+				document.getElementById("resultbox").className = "card text-white bg-danger mb-3";
+				document.getElementById("feedback1").innerHTML = "";
+				document.getElementById("feedback2").innerHTML = "";
+				document.getElementById("feedback3").innerHTML = "";
+				document.getElementById("firstnum").className = "form-control form-control-lg";
+				document.getElementById("secnum").className = "form-control form-control-lg";
+				document.getElementById("thirdnum").className = "form-control form-control-lg";
+				for (var i = 0; i < 3; i++) {
+					if ((check[i] == true) && (isNaN(parseInt(nums[i])))) {
+						if (i == 0) {
+							document.getElementById("firstnum").className = "form-control form-control-lg is-invalid";
+							document.getElementById("feedback1").innerHTML = "no number found";
+						}
+						else if (i == 1) {
+							document.getElementById("secnum").className = "form-control form-control-lg is-invalid";
+							document.getElementById("feedback2").innerHTML = "no number found";
+						}
+						else {
+							document.getElementById("thirdnum").className = "form-control form-control-lg is-invalid";
+							document.getElementById("feedback3").innerHTML = "no number found";
+						}
+					}
+					else {
+						if (i == 0) {
+							document.getElementById("firstnum").className = "form-control form-control-lg";
+							document.getElementById("feedback1").innerHTML = "";
+						}
+						else if (i == 1) {
+							document.getElementById("secnum").className = "form-control form-control-lg";
+							document.getElementById("feedback2").innerHTML = "";
+						}
+						else {
+							document.getElementById("thirdnum").className = "form-control form-control-lg";
+							document.getElementById("feedback3").innerHTML = "";
+						}	
+					}
+				}
+			}
+
+		}
+
+		function divide() {
+			deleteData();
+			getData();
+			var first;
+			var second;
+			var result = 1;
+			if (countcheck >= 2) {
+				for (var i = 0; i < 3; i++) {
+					if (check[i] == true) {
+						result /= parseInt(nums[i]);
+						if (isNaN(first)) {
+							first = parseInt(nums[i]);
+						}
+						else {
+							if (isNaN(second)) {
+								second = parseInt(nums[i]);
+							}
+						}
+					}
+				}
+				result *= first * first;
+				if (isNaN(result)) {
+					if ((first == 0) && (second != 0)) {
+						document.getElementById("result").innerHTML = "0";
+						document.getElementById("resultbox").className = "card text-white bg-primary mb-3";					
+					}
+					else if ((first == 0) && (second == 0)) {
+						document.getElementById("result").innerHTML = "Undefined";
+						document.getElementById("resultbox").className = "card text-white bg-danger mb-3";						
+					}
+					else {
+						document.getElementById("result").innerHTML = "Error";
+						document.getElementById("resultbox").className = "card text-white bg-danger mb-3";
+					}
+					for (var i = 0; i < 3; i++) {
+						if ((check[i] == true) && (isNaN(parseInt(nums[i])))) {
+							if (i == 0) {
+								document.getElementById("firstnum").className = "form-control form-control-lg is-invalid";
+								document.getElementById("feedback1").innerHTML = "no number found";
+							}
+							else if (i == 1) {
+								document.getElementById("secnum").className = "form-control form-control-lg is-invalid";
+								document.getElementById("feedback2").innerHTML = "no number found";
+							}
+							else {
+								document.getElementById("thirdnum").className = "form-control form-control-lg is-invalid";
+								document.getElementById("feedback3").innerHTML = "no number found";
+							}
+						}
+						else {
+							if (i == 0) {
+								document.getElementById("firstnum").className = "form-control form-control-lg";
+								document.getElementById("feedback1").innerHTML = "";
+							}
+							else if (i == 1) {
+								document.getElementById("secnum").className = "form-control form-control-lg";
+								document.getElementById("feedback2").innerHTML = "";
+							}
+							else {
+								document.getElementById("thirdnum").className = "form-control form-control-lg";
+								document.getElementById("feedback3").innerHTML = "";
+							}	
+						}
+					}
+				}
+				else {
+					document.getElementById("result").innerHTML = result.toString();
+					document.getElementById("resultbox").className = "card text-white bg-primary mb-3";
+					document.getElementById("feedback1").innerHTML = "";
+					document.getElementById("feedback2").innerHTML = "";
+					document.getElementById("feedback3").innerHTML = "";
+					document.getElementById("firstnum").className = "form-control form-control-lg";
+					document.getElementById("secnum").className = "form-control form-control-lg";
+					document.getElementById("thirdnum").className = "form-control form-control-lg";
+				}
+			}
+			else {
+				document.getElementById("result").innerHTML = "Input two numbers or more";
+				document.getElementById("resultbox").className = "card text-white bg-danger mb-3";
+				document.getElementById("feedback1").innerHTML = "";
+				document.getElementById("feedback2").innerHTML = "";
+				document.getElementById("feedback3").innerHTML = "";
+				document.getElementById("firstnum").className = "form-control form-control-lg";
+				document.getElementById("secnum").className = "form-control form-control-lg";
+				document.getElementById("thirdnum").className = "form-control form-control-lg";
+				for (var i = 0; i < 3; i++) {
+					if ((check[i] == true) && (isNaN(parseInt(nums[i])))) {
+						if (i == 0) {
+							document.getElementById("firstnum").className = "form-control form-control-lg is-invalid";
+							document.getElementById("feedback1").innerHTML = "no number found";
+						}
+						else if (i == 1) {
+							document.getElementById("secnum").className = "form-control form-control-lg is-invalid";
+							document.getElementById("feedback2").innerHTML = "no number found";
+						}
+						else {
+							document.getElementById("thirdnum").className = "form-control form-control-lg is-invalid";
+							document.getElementById("feedback3").innerHTML = "no number found";
+						}
+					}
+					else {
+						if (i == 0) {
+							document.getElementById("firstnum").className = "form-control form-control-lg";
+							document.getElementById("feedback1").innerHTML = "";
+						}
+						else if (i == 1) {
+							document.getElementById("secnum").className = "form-control form-control-lg";
+							document.getElementById("feedback2").innerHTML = "";
+						}
+						else {
+							document.getElementById("thirdnum").className = "form-control form-control-lg";
+							document.getElementById("feedback3").innerHTML = "";
+						}	
+					}
+				}
+			}
+		}
+
+	</script>
+
+</body>
+</html>
