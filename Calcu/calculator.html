@@ -438,7 +438,7 @@
 				}
 				result *= first * first;
 				if (isNaN(result)) {
-					if ((first == 0) && (second != 0)) {
+					if ((first == 0) && (second != 0) && (!isNaN(second))) {
 						document.getElementById("result").innerHTML = "0";
 						document.getElementById("resultbox").className = "card text-white bg-primary mb-3";					
 					}
